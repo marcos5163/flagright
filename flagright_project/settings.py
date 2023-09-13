@@ -86,13 +86,15 @@ WSGI_APPLICATION = 'flagright_project.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    #TODO move secrets to env
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'flagright_db'),
-        'USER': os.getenv('POSTGRES_USER', 'flagright_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
-        'HOST':os.getenv('POSTGRES_HOST', 'localhost'),
+        'NAME': 'testdb_72x7',
+        'USER': 'testdb_72x7_user',
+        'PASSWORD': 'JN8hrKFLesHKjWPD0ah2DGry2qKj2Nkc',
+        'HOST':'dpg-ck0rhdr6fquc73a78190-a.oregon-postgres.render.com',
         'PORT': '5432',
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
