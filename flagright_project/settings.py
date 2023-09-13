@@ -9,11 +9,21 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+from celery import Celery
+
+app = Celery('yourproject')
+
+# Load task modules from all registered Django app configs.
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# Load tasks.py in each Django app
+app.autodiscover_tasks()
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,7 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'youtubeapi_app'
+    'youtubeapi_app',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -77,10 +88,10 @@ WSGI_APPLICATION = 'flagright_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'flagright_db',
-        'USER': 'flagright_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'NAME': os.getenv('POSTGRES_DB', 'flagright_db'),
+        'USER': os.getenv('POSTGRES_USER', 'flagright_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'HOST':os.getenv('POSTGRES_HOST', 'localhost'),
         'PORT': '5432',
     }
 }

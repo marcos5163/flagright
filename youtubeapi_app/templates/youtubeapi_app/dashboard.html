@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>YouTube Video Dashboard</h1>
+
+
+<form method="GET">
+    <label for="search_query">Search:</label>
+    <input type="text" name="search_query" value="{{ request.GET.search_query }}">
+    <button type="submit">Search</button>
+</form>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Published Date</th>
+            <th>Thumbnail</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for video in videos %}
+        <tr>
+            <td>{{ video.title }}</td>
+            <td>
+                <div class="description">
+                    <p id="{{forloop.counter}}_short" class="short-description">{{ video.description|truncatechars:40 }}
+                    </p>
+                    <p id="{{forloop.counter}}" class="full-description" style="display: none;">{{ video.description }}
+                    </p>
+                    {% if video.description|length > 40 %}
+                    <!-- <button class="more-button">More</button> -->
+                    <button id="{{forloop.counter}}_btn" class="more-button"
+                        onclick="toggleVisibility('{{forloop.counter}}')">More</button>
+                    {% endif %}
+                </div>
+            </td>
+            <td>{{ video.published_datetime }}</td>
+            <td><img src="{{ video.thumbnail_url }}" alt="Thumbnail"></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No videos found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if videos.has_previous %}
+        <a href="?page=1">first</a>
+        <a href="?page={{ videos.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current-page">{{ videos.number }}</span>
+
+        {% if videos.has_next %}
+        <a href="?page={{ videos.next_page_number }}">next</a>
+        <a href="?page={{ videos.paginator.num_pages }}">last</a>
+        {% endif %}
+    </span>
+</div>
+
+
+<script>
+    function toggleVisibility(elementId) {
+        const element = document.getElementById(elementId);
+        const elementShort = document.getElementById(elementId + "_short");
+        const btn = document.getElementById(elementId + "_btn");
+
+        if (element.style.display === 'none') {
+            element.style.display = 'block';
+            elementShort.style.display = 'none';
+            btn.textContent = "Less";
+        } else {
+            element.style.display = 'none';
+            elementShort.style.display = 'block';
+            btn.textContent = "More";
+        }
+    }
+
+    // console.log("hello")
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     const moreButtons = document.querySelectorAll('.more-button');
+    //     console.log({ moreButtons })
+    //     moreButtons.forEach(button => {
+    //         button.addEventListener('click', function () {
+    //             const descriptionDiv = this.previousElementSibling;
+    //             descriptionDiv.style.display = '';
+    //             if (this.textContent === 'More') {
+    //                 this.textContent = 'Less';
+    //             } else {
+    //                 this.textContent = 'More';
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+
+{% endblock %}
