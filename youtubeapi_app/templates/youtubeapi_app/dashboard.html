@@ -4,22 +4,43 @@
 <h1>YouTube Video Dashboard</h1>
 
 
-<form method="GET">
-    <label for="search_query">Search:</label>
-    <input type="text" name="search_query" value="{{ request.GET.search_query }}">
-    <button type="submit">Search</button>
-</form>
+
+<div style="display: flex; justify-content: space-between;">
+    <form method="GET">
+        <label for="search_query">Search:</label>
+        <input type="text" name="search_query" value="{{ request.GET.search_query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <form method="GET">
+        <label for="flag">Change Video Sync Status:</label>
+        <select name="flag" id="flag">
+            <option value="pause" onclick="toggleSyncing(value)">Pause Video Fetching</option>
+            <option value="resume" onclick="toggleSyncing(value)">Resume Video Fetching</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <form method="GET">
+        <label for="sort_by">Sort By Published Date:</label>
+        <select name="sort_by" id="sort_by">
+            <option value="published_datetime_asc" onclick="toggleSorting(value)">Ascending</option>
+            <option value="published_datetime_dsc" onclick="toggleSorting(value)">Descending</option>
+        </select>
+        <button type="submit">Sort</button>
+    </form>
+</div>
+
+<h4>
+    {{ video_count }} videos synced..
+    <button style="margin-left: 10px;" type="submit" onclick="getNewCount()">Refresh</button>
+</h4>
+
+
+
 
 
 <table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Published Date</th>
-            <th>Thumbnail</th>
-        </tr>
-    </thead>
     <tbody>
         {% for video in videos %}
         <tr>
@@ -67,6 +88,16 @@
 
 
 <script>
+    function toggleSyncing(flag) {
+        request.GET.flag
+    }
+    function getNewCount() {
+        window.location.href = window.location.origin + window.location.pathname;
+    }
+    function toggleSorting(sort_by) {
+        request.GET.sort_by
+    }
+
     function toggleVisibility(elementId) {
         const element = document.getElementById(elementId);
         const elementShort = document.getElementById(elementId + "_short");
@@ -82,23 +113,6 @@
             btn.textContent = "More";
         }
     }
-
-    // console.log("hello")
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     const moreButtons = document.querySelectorAll('.more-button');
-    //     console.log({ moreButtons })
-    //     moreButtons.forEach(button => {
-    //         button.addEventListener('click', function () {
-    //             const descriptionDiv = this.previousElementSibling;
-    //             descriptionDiv.style.display = '';
-    //             if (this.textContent === 'More') {
-    //                 this.textContent = 'Less';
-    //             } else {
-    //                 this.textContent = 'More';
-    //             }
-    //         });
-    //     });
-    // });
 </script>
 
 {% endblock %}

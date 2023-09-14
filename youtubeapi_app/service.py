@@ -52,7 +52,7 @@ async def fetch_and_store_videos(next_page_token=None):
                 print(f"Switched to API key {key_in_use}")
             return await fetch_and_store_videos(next_page_token)
     
-    next_page_token = response['nextPageToken']
+    next_page_token = response.get('nextPageToken')
     # Process and store videos in the database
     for item in response['items']:
         video_id = item['id']['videoId']
